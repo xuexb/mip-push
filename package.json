@@ -50,6 +50,7 @@
     "sinon-chai": "^2.9.0"
   },
   "dependencies": {
-    "babel-runtime": "6.x.x"
+    "babel-runtime": "6.x.x",
+    "request": "^2.81.0"
   }
 }

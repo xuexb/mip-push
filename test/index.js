@@ -1,7 +1,11 @@
+/**
+ * @file 测试用例
+ * @author xuexb <fe.xiaowu@gmail.com>
+ */
+
 import Mip from '../src/';
-import { expect } from 'chai';
+import {expect} from 'chai';
 import sinon from 'sinon';
-import request from 'request';
 
 describe('mip-push', () => {
     let server;
@@ -17,6 +21,7 @@ describe('mip-push', () => {
             spy.restore();
             spy = null;
         }
+
     });
 
     it('check options', () => {
@@ -92,7 +97,6 @@ describe('mip-push', () => {
     //             'Content-Type': 'text/plain'
     //         }, 'test']);
 
-
     //     app.push('xuexb.com').then(a => {
     //         console.log(a);
     //         done();
@@ -113,8 +117,8 @@ describe('mip-push', () => {
         app.push('url2');
 
         expect(spy.calledTwice).to.be.true;
-        expect(spy.args[0]).to.deep.equal(['push', ['url1']]);;
-        expect(spy.args[1]).to.deep.equal(['push', ['url2']]);;
+        expect(spy.args[0]).to.deep.equal(['push', ['url1']]);
+        expect(spy.args[1]).to.deep.equal(['push', ['url2']]);
     });
 
     it('#delete', () => {
@@ -129,8 +133,8 @@ describe('mip-push', () => {
         app.delete('url2');
 
         expect(spy.calledTwice).to.be.true;
-        expect(spy.args[0]).to.deep.equal(['delete', ['url1']]);;
-        expect(spy.args[1]).to.deep.equal(['delete', ['url2']]);;
+        expect(spy.args[0]).to.deep.equal(['delete', ['url1']]);
+        expect(spy.args[1]).to.deep.equal(['delete', ['url2']]);
     });
 
     it('#update', () => {
@@ -145,7 +149,7 @@ describe('mip-push', () => {
         app.update('url2');
 
         expect(spy.calledTwice).to.be.true;
-        expect(spy.args[0]).to.deep.equal(['update', ['url1']]);;
-        expect(spy.args[1]).to.deep.equal(['update', ['url2']]);;
+        expect(spy.args[0]).to.deep.equal(['update', ['url1']]);
+        expect(spy.args[1]).to.deep.equal(['update', ['url2']]);
     });
 });
