@@ -29,12 +29,6 @@ app.push([
     url2,
     url3
 ]);
-
-// 删除数据
-app.delete(url1);
-
-// 更新数据
-app.update(url1);
 ```
 
 ## 成功响应
@@ -87,11 +81,22 @@ app.update(url1);
     error: 4xx,
 
     // 错误描述
-    msg: 'token is not valid'
+    message: 'token is not valid'
 }
 ```
+
+## 更新日志
+
+### 0.1.0
+
+- 由于百度站长平台接口更新, 删除`delete, update`接口
+- 优化代码和测试覆盖率
+- 添加`nodejs4.x-nodejs8.x`测试
+
+### 0.0.2
+
+发布npm包
 
 ## todo
 
 - [ ] cli命令
-- [ ] 测试覆盖
