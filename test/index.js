@@ -4,9 +4,12 @@
  */
 
 import Mip from '../src/';
-import {expect} from 'chai';
+import {expect, default as chai} from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import request from 'request';
+
+chai.use(chaiAsPromised);
 
 describe('mip-push', () => {
     let spy;
@@ -15,6 +18,10 @@ describe('mip-push', () => {
         if (spy) {
             spy.restore();
             spy = null;
+        }
+
+        if ('function' === typeof request.post.restore) {
+            request.post.restore();
         }
     });
 
@@ -59,6 +66,9 @@ describe('mip-push', () => {
             token: '123456'
         });
 
+        // 拦截请求数据
+        app._send = () => {};
+
         [
             '',
             1,
@@ -85,20 +95,14 @@ describe('mip-push', () => {
         beforeEach(() => {
             app = new Mip({
                 site: 'mip.xuexb.com',
-                token: 123456
+                token: '123'
             });
-        });
-
-        afterEach(() => {
-            if ('function' === typeof request.post.restore) {
-                request.post.restore();
-            }
         });
 
         it('server error', done => {
             sinon.stub(request, 'post').yields('error');
 
-            app._send('http://xuexb.com', ['1']).catch(err => {
+            app._send('push', ['http://xuexb.com']).catch(err => {
                 expect(err).to.deep.equal({
                     error: -1,
                     message: 'error'
@@ -111,7 +115,7 @@ describe('mip-push', () => {
         it('parse json error', done => {
             sinon.stub(request, 'post').yields(null, '', '{');
 
-            app._send('http://xuexb.com', ['1']).catch(err => {
+            app._send('push', ['http://xuexb.com']).catch(err => {
                 expect(err).to.deep.equal({
                     error: -2,
                     message: 'parse json error'
@@ -126,7 +130,7 @@ describe('mip-push', () => {
                 error: 1
             }));
 
-            app._send('http://xuexb.com', ['1']).catch(err => {
+            app._send('push', ['http://xuexb.com']).catch(err => {
                 expect(err).to.deep.equal({
                     error: 1,
                     message: 'server code error'
@@ -137,12 +141,11 @@ describe('mip-push', () => {
         });
 
         it('zhanzhang data error', done => {
-            app._send('http://xuexb.com', ['xx']).catch(err => {
+            app._send('push', ['http://api.xuexb.com']).catch(err => {
                 expect(err).to.deep.equal({
-                    error: 1,
-                    message: 'auth check fail'
+                    error: 401,
+                    message: 'token is not valid'
                 });
-
                 done();
             });
         });
@@ -154,60 +157,72 @@ describe('mip-push', () => {
             token: 123456
         });
 
+        // 拦截请求数据
+        app._send = () => {};
+
         spy = sinon.spy(app, '_send');
 
         app.push('url1');
-        app.push('url2');
+        app.push(['url2']);
 
         expect(spy.calledTwice).to.be.true;
         expect(spy.args[0]).to.deep.equal(['push', ['url1']]);
         expect(spy.args[1]).to.deep.equal(['push', ['url2']]);
     });
 
-    it('#delete', () => {
-        const app = new Mip({
-            site: 'mip.xuexb.com',
-            token: 123456
-        });
+    // it('#delete', () => {
+    //     const app = new Mip({
+    //         site: 'mip.xuexb.com',
+    //         token: 123456
+    //     });
 
-        spy = sinon.spy(app, '_send');
+    //     spy = sinon.spy(app, '_send');
 
-        app.delete('url1');
-        app.delete('url2');
+    //     app.delete('url1');
+    //     app.delete('url2');
 
-        expect(spy.calledTwice).to.be.true;
-        expect(spy.args[0]).to.deep.equal(['delete', ['url1']]);
-        expect(spy.args[1]).to.deep.equal(['delete', ['url2']]);
-    });
+    //     expect(spy.calledTwice).to.be.true;
+    //     expect(spy.args[0]).to.deep.equal(['delete', ['url1']]);
+    //     expect(spy.args[1]).to.deep.equal(['delete', ['url2']]);
+    // });
 
-    it('#update', () => {
-        const app = new Mip({
-            site: 'mip.xuexb.com',
-            token: 123456
-        });
+    // it('#update', () => {
+    //     const app = new Mip({
+    //         site: 'mip.xuexb.com',
+    //         token: 123456
+    //     });
 
-        spy = sinon.spy(app, '_send');
+    //     spy = sinon.spy(app, '_send');
 
-        app.update('url1');
-        app.update('url2');
+    //     app.update('url1');
+    //     app.update('url2');
 
-        expect(spy.calledTwice).to.be.true;
-        expect(spy.args[0]).to.deep.equal(['update', ['url1']]);
-        expect(spy.args[1]).to.deep.equal(['update', ['url2']]);
-    });
+    //     expect(spy.calledTwice).to.be.true;
+    //     expect(spy.args[0]).to.deep.equal(['update', ['url1']]);
+    //     expect(spy.args[1]).to.deep.equal(['update', ['url2']]);
+    // });
 
     // 真实数据更新
     if (process.env.MIP_TOKEN && process.env.MIP_SITE) {
-        it('post zhanzhang.baidu.com', done => {
-            new Mip({
+        it('post zhanzhang.baidu.com', () => {
+            const push = new Mip({
                 site: process.env.MIP_SITE,
                 token: process.env.MIP_TOKEN
-            }).update('https://mip.xuexb.com').then(data => {
-                expect(data).to.deep.equal({
-                    status: 0,
-                    msg: 'cache clean success'
-                });
-                done();
+            }).push('https://mip.xuexb.com');
+
+            return expect(push).to.eventually.have.property('success_mip', 1);
+        });
+
+        it('post zhanzhang.baidu.com on error', () => {
+            const push = new Mip({
+                site: process.env.MIP_SITE,
+                token: process.env.MIP_TOKEN
+            }).push('https://api.xuexb.com');
+
+            return push.then(data => {
+                expect(data.success_mip).to.be.undefined;
+                expect(data.success).to.equal(0);
+                expect(data.not_same_site).to.deep.equal(['https://api.xuexb.com']);
             });
         });
     }

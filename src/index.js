@@ -7,9 +7,9 @@ import request from 'request';
 
 export default class Mip {
     static apiUrlMap = {
-        'push': 'http://data.zz.baidu.com/urls',
-        'delete': 'http://data.zz.baidu.com/del',
-        'update': 'http://data.zz.baidu.com/update'
+        push: 'http://data.zz.baidu.com/urls'
+        // 'delete': 'http://data.zz.baidu.com/del',
+        // 'update': 'http://data.zz.baidu.com/update'
     }
 
     constructor(options = {}) {
@@ -45,7 +45,8 @@ export default class Mip {
      */
     _send(action, urls) {
         return new Promise((resolve, reject) => {
-            request.post(this._getApi(action), {
+            request.post({
+                uri: this._getApi(action),
                 multipart: [{
                     'content-type': 'text/plain',
                     'body': urls.join('\n')
@@ -121,9 +122,9 @@ export default class Mip {
      *
      * @return {Promise}
      */
-    delete(urls) {
-        return this._send('delete', this._checkUrl(urls));
-    }
+    // delete(urls) {
+    //     return this._send('delete', this._checkUrl(urls));
+    // }
 
     /**
      * 更新链接
@@ -132,7 +133,7 @@ export default class Mip {
      *
      * @return {Promise}
      */
-    update(urls) {
-        return this._send('update', this._checkUrl(urls));
-    }
+    // update(urls) {
+    //     return this._send('update', this._checkUrl(urls));
+    // }
 }
