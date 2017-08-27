@@ -1,21 +1,21 @@
 {
   "name": "mip-push",
   "version": "0.0.2",
-  "description": "",
+  "description": "使用nodejs推送MIP数据到百度站长平台",
   "main": "lib/index.js",
   "scripts": {
-    "check": "fecs check src/ test/ --reporter=baidu",
+    "check": "fecs check src/ test/ --reporter=baidu --rule",
     "compile": "babel src/ -d lib/",
     "watch": "npm run compile -- --watch",
     "prepublish": "npm run compile",
     "test:watch": "npm run test -- --watch",
-    "test:cov": "istanbul cover node_modules/mocha/bin/_mocha -- --compilers js:babel-register -t 5000 --recursive  -R spec test/",
-    "test": "mocha --compilers js:babel-register --reporter spec --timeout 5000 --recursive test/",
+    "test:cov": "istanbul cover node_modules/mocha/bin/_mocha -- --compilers js:babel-register -t 3000 --recursive  -R spec test/",
+    "test": "mocha --compilers js:babel-register --reporter spec --timeout 3000 --recursive test/",
     "release": "bash ./release.sh"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/xuexb/mip-push.git"
   },
   "contributors": [
     {
@@ -33,9 +33,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/xuexb/mip-push/issues"
   },
-  "homepage": "",
+  "homepage": "https://github.com/xuexb/mip-push",
   "devDependencies": {
     "babel-cli": "6.x.x",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -45,6 +45,7 @@
     "babel-preset-stage-3": "6.x.x",
     "babel-register": "6.x.x",
     "chai": "^3.5.0",
+    "chai-as-promised": "^7.1.1",
     "fecs": "^1.2.2",
     "istanbul": ">=1.0.0-alpha.2",
     "mocha": "^3.2.0",
@@ -54,5 +55,8 @@
   "dependencies": {
     "babel-runtime": "6.x.x",
     "request": "^2.81.0"
+  },
+  "engines": {
+    "node": ">= 4.0.0"
   }
 }
