@@ -1,6 +1,6 @@
 # mip-push
 
-> 百度站长里推送MIP内容
+> 使用nodejs推送MIP数据到百度站长平台
 
 [![code style fecs](https://img.shields.io/badge/code%20style-fecs-brightgreen.svg)](https://github.com/ecomfe/fecs)
 [![Build Status](https://travis-ci.org/xuexb/mip-push.svg?branch=master)](https://travis-ci.org/xuexb/mip-push)
