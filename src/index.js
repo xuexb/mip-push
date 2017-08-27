@@ -45,9 +45,7 @@ export default class Mip {
      */
     _send(action, urls) {
         return new Promise((resolve, reject) => {
-            request({
-                method: 'POST',
-                uri: this._getApi(action),
+            request.post(this._getApi(action), {
                 multipart: [{
                     'content-type': 'text/plain',
                     'body': urls.join('\n')
@@ -56,7 +54,7 @@ export default class Mip {
                 if (error) {
                     return reject({
                         error: -1,
-                        message: error || 'server error'
+                        message: error
                     });
                 }
 
