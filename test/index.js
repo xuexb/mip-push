@@ -203,11 +203,11 @@ describe('mip-push', () => {
     // });
 
     // 真实数据更新
-    if (process.env.MIP_TOKEN && process.env.MIP_SITE) {
+    if (process.env.MIP_PUSH_TOKEN && process.env.MIP_PUSH_SITE) {
         it('post zhanzhang.baidu.com', () => {
             const push = new Mip({
-                site: process.env.MIP_SITE,
-                token: process.env.MIP_TOKEN
+                site: process.env.MIP_PUSH_SITE,
+                token: process.env.MIP_PUSH_TOKEN
             }).push('https://mip.xuexb.com');
 
             return expect(push).to.eventually.have.property('success_mip', 1);
@@ -215,8 +215,8 @@ describe('mip-push', () => {
 
         it('post zhanzhang.baidu.com on error', () => {
             const push = new Mip({
-                site: process.env.MIP_SITE,
-                token: process.env.MIP_TOKEN
+                site: process.env.MIP_PUSH_SITE,
+                token: process.env.MIP_PUSH_TOKEN
             }).push('https://api.xuexb.com');
 
             return push.then(data => {
