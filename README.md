@@ -22,13 +22,21 @@ var app = new Mip({
     token: ''
 });
 
-// 推送数据
-app.push(url);
+// 推送数据，返回 Promise
+app.push(url).then(function (res) {
+    console.log(res);
+}).catch(function (err) {
+    console.error(err);
+});
 app.push([
     url1,
     url2,
     url3
-]);
+]).then(function (res) {
+    console.log(res);
+}).catch(function (err) {
+    console.error(err);
+});
 ```
 
 ## 成功响应
